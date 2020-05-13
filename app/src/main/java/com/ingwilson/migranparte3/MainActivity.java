@@ -1,10 +1,11 @@
-package com.publinice.migranparte3;
+package com.ingwilson.migranparte3;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -24,7 +25,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainActivity  extends FragmentActivity
-        implements OnMapReadyCallback , GoogleMap.OnMapClickListener {
+        implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
     GoogleMap mapa;
     LatLng ubicacion;
     @Override
@@ -35,7 +36,6 @@ public class MainActivity  extends FragmentActivity
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getSupportFragmentManager().findFragmentById(R.id.mapa);
         mapFragment.getMapAsync(this);
-
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
         {
@@ -51,7 +51,7 @@ public class MainActivity  extends FragmentActivity
             {
                 Toast.makeText(getApplicationContext(), "Se cambio de posicion", Toast.LENGTH_SHORT).show();
                 Double latitude=location.getLatitude();
-                Double longitude=location.getLatitude();
+                Double longitude=location.getLongitude();
                 Toast.makeText(getApplicationContext(), "latitud: "+ latitude.toString()+ " longitud: "+ longitude.toString(), Toast.LENGTH_SHORT).show();
                 if(checkseguir==1)
                     if (mapa.getMyLocation() != null)
@@ -69,6 +69,9 @@ public class MainActivity  extends FragmentActivity
             {
             }
         };
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED)
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
     }
     @Override
@@ -76,7 +79,7 @@ public class MainActivity  extends FragmentActivity
         mapa = googleMap;
         ubicacion = new LatLng(-18.013766, -70.255331); //Nos ubicamos en la UNJBG
         mapa.addMarker(new MarkerOptions().position(ubicacion).title("Marcador Tacna"));
-        mapa.moveCamera(CameraUpdateFactory.newLatLng(ubicacion));
+        mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacion,15));
         mapa.setOnMapClickListener(this);
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) ==
@@ -93,10 +96,11 @@ public class MainActivity  extends FragmentActivity
         mapa.moveCamera(CameraUpdateFactory.newLatLng(ubicacion));
     }
     public void addMarker(View view) {
-        mapa.addMarker(new MarkerOptions().position(
-                mapa.getCameraPosition().target));
+        Log.i("mipunto2",mapa.getCameraPosition().target.toString());
         Log.i("mipunto2",String.valueOf(mapa.getCameraPosition().target.latitude));
         Log.i("mipunto2",String.valueOf(mapa.getCameraPosition().target.longitude));
+        mapa.addMarker(new MarkerOptions().position(
+                mapa.getCameraPosition().target));
     }
     @Override public void onMapClick(LatLng puntoPulsado) {
         Log.i("mipunto",puntoPulsado.toString());
@@ -104,17 +108,16 @@ public class MainActivity  extends FragmentActivity
         Log.i("mipunto",String.valueOf(puntoPulsado.longitude));
         mapa.addMarker(new MarkerOptions().position(puntoPulsado)
                 .icon(BitmapDescriptorFactory
-                        .defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+                        .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
     }
-
     public void ubicacion(View view) {
         if (mapa.getMyLocation() != null)
             mapa.animateCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(mapa.getMyLocation().getLatitude(),
                             mapa.getMyLocation().getLongitude()), 15));
     }
-    int checkseguir=0;
 
+    int checkseguir=0;
     public void Seguir(View view) {
         Button btnseguir=findViewById(R.id.btnseguir);
         if (checkseguir==0) {
@@ -127,6 +130,12 @@ public class MainActivity  extends FragmentActivity
             btnseguir.setText("ON seguir");
             Toast.makeText(this, "Se desactivo el seguimiento", Toast.LENGTH_SHORT).show();
         }
+    }
+    public void mifusedlocation(View view) {
+        startActivity(new Intent(this, MiFusedLocation.class));
+    }
 
+    public void migoogleapiclient(View view) {
+        startActivity(new Intent(this, MiFusedLocationClient.class));
     }
 }

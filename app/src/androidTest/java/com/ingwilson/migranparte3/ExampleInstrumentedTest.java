@@ -1,4 +1,4 @@
-package com.publinice.migranparte3;
+package com.ingwilson.migranparte3;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("com.publinice.migranparte3", appContext.getPackageName());
+        assertEquals("com.ingwilson.migranparte3", appContext.getPackageName());
     }
 }

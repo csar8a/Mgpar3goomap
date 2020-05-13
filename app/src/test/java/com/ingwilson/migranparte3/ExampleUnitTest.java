@@ -1,4 +1,4 @@
-package com.publinice.migranparte3;
+package com.ingwilson.migranparte3;
 
 import org.junit.Test;
 
